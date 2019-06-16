@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Friends Home Page</title>
+
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="text-center">
+                </span> Friend Finder</h1>
+            <hr>
+            <h3 class="text-center">Fill out the survey to meet a friend!</h3>
+            <br>
+            <div class="text-center">
+                <a href="/">
+                    <button class="btn btn-lg btn-default">
+                        <span class="fa fa-home"></span>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        Questions
+                    </div>
+                    <div class="card-body">
+                        <form role="form">
+
+                            <h5>Q1: Which best matches your temperament?</h5>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Choose</label>
+                                <select class="form-control" id="select-temperament">
+                                    <option value=0>Friendly</option>
+                                    <option value=1>Calm</option>
+                                    <option value=2>Spazzy</option>
+                                    <option value=3>Grumpy</option>
+                                </select>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <h5>Q2: Which best describes your eating habits?</h5>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Choose</label>
+                                <select class="form-control" id="select-eating">
+                                    <option value=0>Disciplined</option>
+                                    <option value=1>Indifferent</option>
+                                    <option value=2>Human Vacuum</option>
+                                    <option value=3>Picky Eater</option>
+                                </select>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <h5>Q3: How do you feel about other people?</h5>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Choose</label>
+                                <select class="form-control" id="select-social">
+                                    <option value=0>Fine, but I prefer animals</option>
+                                    <option value=1>I wish they left me alone</option>
+                                    <option value=2>Indifferent</option>
+                                    <option value=3>I love them</option>
+                                </select>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <h5>Q4: Describe your voice</h5>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Choose</label>
+                                <select class="form-control" id="select-voice">
+                                    <option value=0>Loud</option>
+                                    <option value=1>High pitched</option>
+                                    <option value=2>Whiny</option>
+                                    <option value=3>Quiet</option>
+                                </select>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <button type="submit" class="btn btn-primary submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+          
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id="dog-name" class="modal-title">Your Match</h4>
+              </div>
+              <div class="modal-body">
+                <p>Here's your friend!</p>
+                <img id="dog-img" src="https://cdn.pixabay.com/photo/2017/09/06/21/44/dog-2723147_1280.jpg" width="400" alt="dog">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p></p>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#select-temperament").val(""),
+        $("#select-eating").val(""),
+        $("#select-social").val(""),
+        $("#select-voice").val("")
+    });
+
+
+    $(".submit").on("click", function (event) {
+        event.preventDefault();
+
+        // Grab form elements
+        var userSelections = {
+            temperament: $("#select-temperament").val().trim(),
+            eating: $("#select-eating").val().trim(),
+            social: $("#select-social").val().trim(),
+            voice: $("#select-voice").val().trim()
+        };
+
+        console.log(userSelections);
+
+        $.post("/api/friends", userSelections,
+            function (data) {
+
+                if (data) {
+                    console.log(data.name)
+
+                    $("#dog-img").attr("src",data.photo);
+                    $("#dog-name").text(data.name);
+                    $("#myModal").modal();
+
+                }
+
+                else {
+                    alert("Couldn't process your request");
+                }
+
+                $("#select-temperament").val(""),
+                $("#select-eating").val(""),
+                $("#select-social").val(""),
+                $("#select-voice").val("")
+
+            });
+    });
+
+</script>
